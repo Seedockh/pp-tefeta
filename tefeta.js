@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 const fs = require('fs')
+const os = require('os')
 
-let map = fs.readFileSync(process.argv[2], 'utf8').split('\r\n')
+let map = fs.readFileSync(process.argv[2], 'utf8').split(os.platform() === 'win32' ? '\r\n' : '\n')
 let path = '.'
 let wall = '*'
 let clean = ' '
@@ -56,9 +57,9 @@ for (let i = entry[0]; vDir ? i <= exit[0] : i >= exit[0]; vDir ? i++ : i--) {
       if (l === lineExit && map[i][l] === clean) newLine += path
       else {
         // when ** cursor --- lineExit **
-        if (hDir && l > cursor && l < lineExit && map[i][l] === clean) newLine += path
+        if (hDir && l >= cursor && l <= lineExit && map[i][l] === clean) newLine += path
         // when ** lineExit --- cursor **
-        else if (!hDir && l < cursor && l > lineExit && map[i][l] === clean) newLine += path
+        else if (!hDir && l <= cursor && l >= lineExit && map[i][l] === clean) newLine += path
         else newLine += map[i][l]
       }
     }
